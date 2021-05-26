@@ -20,6 +20,14 @@ LOG_LEVEL = logging.DEBUG
 
 def main_ip_routing(argv=sys.argv):
     log = setup_logging()
+    try:
+        return _main_ip_routing(argv, log=log)
+    except:
+        if not sys.stdout.isatty():
+            log.exception('unhandled exception in "_main"')
+        return 100
+
+def _main_ip_routing(argv, *, log):
     if len(argv) < 5:
         sys.stderr.write(f'usage: {argv[0]} NETWORK_NAME ACTION STATUS -\n')
         if not sys.stdout.isatty():

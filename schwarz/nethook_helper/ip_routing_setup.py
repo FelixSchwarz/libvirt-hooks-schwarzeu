@@ -16,7 +16,7 @@ __all__ = []
 
 ROUTING_FILE = '/etc/sysconfig/routed-ips'
 LOG_LEVEL = logging.DEBUG
-
+SYSLOG_IDENT = 'libvirt-nethook-helper'
 
 def main_ip_routing(argv=sys.argv):
     log = setup_logging()
@@ -64,9 +64,9 @@ def setup_logging():
     # Python's SysLogHandler just prepends the "ident" string before each log
     # message so we need an extra space after the actual identification.
     # .ident attribute present Python 3.3+ (https://bugs.python.org/issue12419)
-    syslog_h.ident = 'libvirt-hooks '
+    syslog_h.ident = SYSLOG_IDENT + ' '
 
-    logger = logging.getLogger('hook-logs')
+    logger = logging.getLogger('nethook_helper')
     logger.setLevel(LOG_LEVEL)
     logger.addHandler(syslog_h)
     return logger

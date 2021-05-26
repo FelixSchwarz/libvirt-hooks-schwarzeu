@@ -1,4 +1,4 @@
-# libvirt-hooks (schwarz.eu)
+# libvirt-nethook-helper
 
 This repo contains a [libvirt](https://libvirt.org/) `network` hook to route configured IP addresses to a certain libvirt network.
 
@@ -10,8 +10,8 @@ Tested on RHEL 8, Debian/Ubuntu may use different paths (pull requests welcome).
 
 - clone this repo
 - `$ ./setup.py bdist_wheel`
-- copy `libvirt_hooks_schwarzeu-*.whl` to the libvirt machine.
-- `# pip3 install libvirt_hooks_schwarzeu-*.whl` (bonus idea: use a virtual env in `/usr/local/`)
+- copy `libvirt_nethook_helper-*.whl` to the libvirt machine.
+- `# pip3 install libvirt_nethook_helper-*.whl` (bonus idea: use a virtual env in `/usr/local/`)
 - create directory `/etc/libvirt/hooks/` if it does not exist
 - create a symlink `/etc/libvirt/hooks/network` pointing to `/path/to/lv-setup-routed-ips`
 

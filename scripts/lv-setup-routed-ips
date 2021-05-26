@@ -1,0 +1,10 @@
+#!/usr/bin/env python3
+
+import sys
+
+from schwarz.libvirt_hooks.ip_routing_setup import main_ip_routing
+
+if __name__ == '__main__':
+    rc = main_ip_routing()
+    sys.exit(rc)
+

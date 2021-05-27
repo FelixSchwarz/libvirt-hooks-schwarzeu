@@ -3,7 +3,7 @@
 
 Name:           libvirt-nethook-helper
 Version:        0.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Script to set up routed libvirt networks
 License:        MIT
 URL:            https://github.com/FelixSchwarz/libvirt-nethook-helper
@@ -32,6 +32,8 @@ rules are too strict.
 
 %install
 %py3_install
+mkdir --parents %{buildroot}%{_libexecdir}/
+mv %{buildroot}%{_bindir}/lv-setup-routed-ips %{buildroot}%{_libexecdir}/
 mkdir --parents %{buildroot}%{_sysconfdir}/sysconfig
 install --preserve-timestamps \
     %{SOURCE1} %{buildroot}%{_sysconfdir}/sysconfig/routed-ips
@@ -40,7 +42,7 @@ install --preserve-timestamps \
 %files
 %license LICENSE.txt
 %doc README.md
-%{_bindir}/lv-setup-routed-ips
+%{_libexecdir}/lv-setup-routed-ips
 %config(noreplace) %{_sysconfdir}/sysconfig/routed-ips
 %dir %{python3_sitelib}/schwarz
 %{python3_sitelib}/schwarz/nethook_helper
@@ -49,6 +51,9 @@ install --preserve-timestamps \
 
 
 %changelog
+* Thu May 27 2021 Felix Schwarz <felix.schwarz@oss.schwarz.eu> 0.5-2
+- move helper script to /usr/libexec
+
 * Wed May 26 2021 Felix Schwarz <felix.schwarz@oss.schwarz.eu> 0.5-1
 - initial package
 

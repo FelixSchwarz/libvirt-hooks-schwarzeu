@@ -32,6 +32,7 @@ rules are too strict.
 
 %install
 %py3_install
+rm -rf %{buildroot}%{python3_sitelib}/tests
 mkdir --parents %{buildroot}%{_libexecdir}/
 mv %{buildroot}%{_bindir}/lv-setup-routed-ips %{buildroot}%{_libexecdir}/
 mkdir --parents %{buildroot}%{_sysconfdir}/sysconfig

@@ -2,35 +2,37 @@
 # SPDX-License-Identifier: MIT
 
 
-__all__ = ['get_routing_commands']
+__all__ = [
+    'commands_ip_route',
+    'commands_iptables_forwarding',
+    'is_ipv6',
+]
 
 CMD_IP = '/sbin/ip'
 CMD_IPTABLESv4 = '/sbin/iptables'
 CMD_IPTABLESv6 = '/sbin/ip6tables'
 
-def get_routing_commands(action, device_name, routed_ips):
-    assert (action in ('started', 'stopped'))
-    if action == 'started':
-        ip_verb = 'add'
-        iptables_cmd = '--insert'
-    else:
-        ip_verb = 'del'
-        iptables_cmd = '--delete'
+def is_ipv6(ip_addr):
+    return (':' in ip_addr)
+
+def commands_ip_route(device_name, ip, *, start=None, stop=None):
+    assert bool(start) ^ bool(stop)
+    cmd_ip = (CMD_IP, '-6') if is_ipv6(ip) else (CMD_IP, '-4')
+    ip_verb = 'add' if start else 'del'
+    commands = [
+        (*cmd_ip, 'route', ip_verb, ip, 'dev', device_name),
+    ]
+    return commands
+
+def commands_iptables_forwarding(device_name, ip, *, start=None, stop=None):
+    assert bool(start) ^ bool(stop)
+    iptables_cmd = '--insert' if start else '--delete'
 
     commands = []
-    is_ipv6 = lambda ip_addr: (':' in ip_addr)
-    for ip in routed_ips:
-        if is_ipv6(ip):
-            iptables = CMD_IPTABLESv6
-            cmd_ip = (CMD_IP, '-6')
-        else:
-            iptables = CMD_IPTABLESv4
-            cmd_ip = (CMD_IP, '-4')
-
-        commands.extend((
-            (iptables, iptables_cmd, 'FORWARD', '--in-interface', device_name, '--source', ip, '-j', 'ACCEPT'),
-            (iptables, iptables_cmd, 'FORWARD', '--out-interface', device_name, '--destination', ip, '-j', 'ACCEPT'),
-            (*cmd_ip, 'route', ip_verb, ip, 'dev', device_name),
-        ))
+    iptables = CMD_IPTABLESv6 if is_ipv6(ip) else CMD_IPTABLESv4
+    commands.extend((
+        (iptables, iptables_cmd, 'FORWARD', '--in-interface', device_name, '--source', ip, '-j', 'ACCEPT'),
+        (iptables, iptables_cmd, 'FORWARD', '--out-interface', device_name, '--destination', ip, '-j', 'ACCEPT'),
+    ))
     return commands
 

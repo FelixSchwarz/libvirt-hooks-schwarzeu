@@ -48,7 +48,6 @@ def is_ip_present_in_iptables_config(ip, net_name, iptables_rules, *, log):
             return False
         if rule.target == 'ACCEPT':
             if (rule['in'] == net_name) and (rule.source == ip):
-                log.debug('ip already accepted: %r' % rule)
                 return True
             elif (rule.out == net_name) and (rule.destination == ip):
                 return True

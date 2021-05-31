@@ -2,12 +2,18 @@
 # SPDX-License-Identifier: MIT
 
 
-from pythonic_testcase import *
+from unittest import TestCase
 
 from schwarz.nethook_helper.helpers import parse_iptables_output
 
+assert_equals = None
 
-class IptablesParsingTest(PythonicTestCase):
+
+class IptablesParsingTest(TestCase):
+    def setUp(self):
+        global assert_equals
+        assert_equals = lambda first, second, message=None: self.assertEqual(first, second, msg=message)
+
     def test_can_parse_iptables_output(self):
         output_str = b'''
 Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
@@ -19,7 +25,7 @@ Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
         '''.strip()
 
         iptables_meta = parse_iptables_output(output_str)
-        assert_length(4, iptables_meta.rules)
+        assert_equals(4, len(iptables_meta.rules))
         rule1, rule2, rule3, rule4 = iptables_meta.rules
 
         _r = _Rule

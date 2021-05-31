@@ -12,6 +12,7 @@ Source1:        sysconfig-routed-ips
 BuildArch:      noarch
 
 BuildRequires:  python3-devel
+BuildRequires:  python36-nose
 # /sbin/ip
 Requires:       iproute
 # /sbin/iptables, /sbin/ip6tables
@@ -39,6 +40,9 @@ mkdir --parents %{buildroot}%{_sysconfdir}/sysconfig
 install --preserve-timestamps \
     %{SOURCE1} %{buildroot}%{_sysconfdir}/sysconfig/routed-ips
 
+
+%check
+nosetests-%{python3_version}
 
 %files
 %license LICENSE.txt

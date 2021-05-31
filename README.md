@@ -6,7 +6,7 @@ This repo contains a [libvirt](https://libvirt.org/) `network` hook to route con
 
 ## Installation
 
-Tested on RHEL 8, Debian/Ubuntu may use different paths (pull requests welcome).
+Tested on CentOS 7 and CentOS 8, Debian/Ubuntu may use different paths (pull requests welcome).
 
 - clone this repo
 - `$ ./setup.py bdist_wheel`
@@ -39,7 +39,7 @@ To configure a VM with a routed IP with libvirt you need to do two things:
 
 The main problem is that libvirtd automatically creates its own set of iptables rules which prevent any internet <-> libvirt bridge communication using the routed IPs. Another (though smaller) issue is that you can only set up the route when libvirt created the bridge but that comes *after* the main host networking configuration.
 
-My code tackles both issues by listening to libvirt's `network` hook (`started`/`plugged`/`stopped`). Additionally it also works around a libvirt issue on CentOS 7 where a libvirtd restart (e.g. due to an RPM update) will wipe out the custom iptables configuration leaving your VMs inaccessible.
+My code tackles both issues by listening to libvirt's `network` hook (`started`/`port-created`/`plugged`/`stopped`). Additionally it also works around a libvirt issue on CentOS 7 where a libvirtd restart (e.g. due to an RPM update) will wipe out the custom iptables configuration leaving your VMs inaccessible.
 
 
 ## Limitations / Caveats

@@ -32,7 +32,8 @@ handled_events = {
         # triggered after a daemon restart if a VM is already running.
         # "started" is only used to configure "ip route"
         ('started', 'begin'),
-        ('plugged', 'begin'),
+        ('plugged', 'begin'),      # libvirt 4.5.0-36 (CentOS 7)
+        ('port-created', 'begin'), # libvirt 6.0.0-26 (CentOS 8)
 
         # We can not undo our changed in "unpluged" event because our
         # configuration currently does not contain a reference to specific VMs.
@@ -170,7 +171,7 @@ def allow_ip_forwarding(net_name, net_meta, action, *, log):
         return
     log.debug(f'network "{net_name}": routed IPs={", ".join(routed_ips)}')
 
-    start = (action == 'plugged')
+    start = (action in ('plugged', 'port-created'))
     stop = not start
     log_prefix = f'network="{net_name}"/action="{action}": '
 

@@ -1,6 +1,8 @@
 
 %global dist_name libvirt_nethook_helper
 
+%global py3_prefix python%{python3_pkgversion}
+
 Name:           libvirt-nethook-helper
 Version:        0.5
 Release:        2%{?dist}
@@ -12,7 +14,7 @@ Source1:        sysconfig-routed-ips
 BuildArch:      noarch
 
 BuildRequires:  python3-devel
-BuildRequires:  python36-nose
+BuildRequires:  %{py3_prefix}-nose
 # /sbin/ip
 Requires:       iproute
 # /sbin/iptables, /sbin/ip6tables

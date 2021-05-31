@@ -4,8 +4,8 @@
 %global py3_prefix python%{python3_pkgversion}
 
 Name:           libvirt-nethook-helper
-Version:        0.5
-Release:        2%{?dist}
+Version:        0.6
+Release:        1%{?dist}
 Summary:        Script to set up routed libvirt networks
 License:        MIT
 URL:            https://github.com/FelixSchwarz/libvirt-nethook-helper
@@ -58,6 +58,9 @@ nosetests-%{python3_version}
 
 
 %changelog
+* Mon May 31 2021 Felix Schwarz <felix.schwarz@oss.schwarz.eu> 0.6-1
+- update to 0.6
+
 * Thu May 27 2021 Felix Schwarz <felix.schwarz@oss.schwarz.eu> 0.5-2
 - move helper script to /usr/libexec
 

@@ -10,9 +10,14 @@ Summary:        Script to set up routed libvirt networks
 License:        MIT
 URL:            https://github.com/FelixSchwarz/libvirt-nethook-helper
 Source0:        %{name}-%{version}.tar.gz
-Source1:        sysconfig-routed-ips
+Source1:        %{name}-%{version}.tar.gz.asc
+Source2:        0x77E0DB66.pub
+
+Source10:       sysconfig-routed-ips
 BuildArch:      noarch
 
+# Used to verify OpenPGP signature
+BuildRequires:  gnupg2
 BuildRequires:  python3-devel
 BuildRequires:  %{py3_prefix}-nose
 # /sbin/ip
@@ -27,6 +32,9 @@ network. This makes "routed" libvirt networks usable as the default iptables
 rules are too strict.
 
 %prep
+# remove this line if you are building a custom RPM (or add your public key
+# for SOURCE2)
+%{gpgverify} --keyring='%{SOURCE2}' --signature='%{SOURCE1}' --data='%{SOURCE0}'
 %autosetup -p1 -n %{name}-%{version}
 
 %build
@@ -40,7 +48,7 @@ mkdir --parents %{buildroot}%{_libexecdir}/
 mv %{buildroot}%{_bindir}/lv-setup-routed-ips %{buildroot}%{_libexecdir}/
 mkdir --parents %{buildroot}%{_sysconfdir}/sysconfig
 install --preserve-timestamps \
-    %{SOURCE1} %{buildroot}%{_sysconfdir}/sysconfig/routed-ips
+    %{SOURCE10} %{buildroot}%{_sysconfdir}/sysconfig/routed-ips
 
 
 %check

@@ -41,13 +41,17 @@ The main problem is that libvirtd automatically creates its own set of iptables 
 
 My code tackles both issues by listening to libvirt's `network` hook (`started`/`port-created`/`plugged`/`stopped`). Additionally it also works around a libvirt issue on CentOS 7 where a libvirtd restart (e.g. due to an RPM update) will wipe out the custom iptables configuration leaving your VMs inaccessible.
 
-
 ## Limitations / Caveats
 
 Initially I created the repo to get some old ad-hoc code in a more deployable fashion. I envisioned unit tests and some easy-to-use hook files. However I did not get to that point as my timebox is running out. The current state should work though and at least the code is split up in multiple files, supports syslog logging and uses Python 3 now. Also paths to executables and configuration files are hard-coded right now. It works for me but of course making these configurable would be nice...
 
-Please note that there are no stability guarantees: Neither the current command name (`lv-setup-routed-ips`) nor the configuration syntax in (`/etc/sysconfig/routed-ips`) should be considered as "stable". I'll try not to break compatibility though. It would helpful to know if there are any external users though (so maybe just "star" this repo?) before spending any time to maintain compatibility.
+Using any `network` hook in libvirt will mark the network as "tainted":
 
+    warning : networkNetworkObjTaint:5422 : Network name='...' uuid=... is tainted: hook-script
+
+This warning is generally harmless and does not have any functional effects. The idea is somewhat similar to the taint flag in the Linux kernel ([initial libvirt patch](https://listman.redhat.com/archives/libvir-list/2014-February/msg00695.html), [blog post](https://www.berrange.com/posts/2011/12/19/using-command-line-arg-monitor-command-passthrough-with-libvirt-and-kvm/)): hooks are treated as some kind of internal API and buggy hooks can prevent libvirt from working. libvirt's tainting concept means that supporters can see pretty quickly if something "uncommon" was used. However [the hook API is publicly documented](https://libvirt.org/hooks.html) and is working fine for us since 2016.
+
+Please note that there are no stability guarantees: Neither the current command name (`lv-setup-routed-ips`) nor the configuration syntax in (`/etc/sysconfig/routed-ips`) should be considered as "stable". I'll try not to break compatibility though. It would helpful to know if there are any external users though (so maybe just "star" this repo?) before spending any time to maintain compatibility.
 
 ## Other Projects / Additional Ressources
 
